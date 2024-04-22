@@ -5,7 +5,7 @@ import {v4 as uuid} from 'uuid';
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
-    selectedActivity: Activity | undefined = undefined;
+    selectedActivity?: Activity | undefined = undefined;
     editMode = false;
     loading = false;
     loadingInitial = false;
@@ -19,19 +19,29 @@ export default class ActivityStore {
         Date.parse(a.date) - Date.parse(b.date));
     }
 
+    get groupedActivities() {
+        return Object.entries(
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = activity.date;
+                activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+                return activities;
+            }, {} as {[key: string]: Activity[]})
+        )
+    }
+
     loadActivities = async () => {
         this.setLoadingInitial(true);
         try {
-            const activities = await agent.Activities.list();
-                activities.forEach(activity => {
-                    this.setActivity(activity)
-                  })
-                  this.setLoadingInitial(false);
+          const activities = await agent.Activities.list();
+          activities.forEach(activity => {
+            this.setActivity(activity);
+          });
+          this.setLoadingInitial(false); // Sørg for å sette loadingInitial til false etter lasting
         } catch (error) {
-            console.log(error);
-            this.setLoadingInitial(false);     
+          console.log('Error: ', error);
+          this.setLoadingInitial(false);
         }
-    }
+      }
 
     loadActivity = async (id: string) => {
         let activity = this.getActivity(id);
@@ -48,7 +58,7 @@ export default class ActivityStore {
                 this.setLoadingInitial(false);
                 return activity;
             } catch (error) {
-                console.log(error);
+                console.log('Error: ', error);
                 this.setLoadingInitial(false);
             }
         }
@@ -80,10 +90,7 @@ export default class ActivityStore {
             })
         } catch (error) {
             console.log(error);
-            runInAction(() => {
-                this.loading = false;
-            })
-            
+            runInAction(() => this.loading = false);  
         }
     }
 
