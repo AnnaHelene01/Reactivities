@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Controller
+namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -17,8 +17,8 @@ namespace API.Controller
         private readonly TokenService _tokenService;
         public AccountController(UserManager<AppUser> userManager, TokenService tokenService)
         {
-            _userManager = userManager;
             _tokenService = tokenService;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -33,8 +33,9 @@ namespace API.Controller
 
             if (result)
             {
-                return CreateUserObject(user);  
+                return CreateUserObject(user);
             }
+
             return Unauthorized();
         }
 
@@ -44,11 +45,14 @@ namespace API.Controller
         {
             if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.UserName))
             {
-                return BadRequest("Username is already taken");
+                ModelState.AddModelError("username", "Username taken");
+                return ValidationProblem();
             }
+
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
-                return BadRequest("Email is already taken");
+                ModelState.AddModelError("email", "Email taken");
+                return ValidationProblem();
             }
 
             var user = new AppUser
@@ -68,13 +72,13 @@ namespace API.Controller
             return BadRequest(result.Errors);
         }
 
-
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
-            return CreateUserObject(user);  
+
+            return CreateUserObject(user);
         }
 
         private UserDto CreateUserObject(AppUser user)
@@ -87,6 +91,5 @@ namespace API.Controller
                 UserName = user.UserName
             };
         }
-        
     }
 }
