@@ -30,8 +30,9 @@ export default observer(function RegsiterForm() {
                     <MyTextInput placeholder="Username" name='username' />
                     <MyTextInput placeholder="Email" name='email' />
                     <MyTextInput placeholder="Password" name='password' type='password' />
-                    <ErrorMessage name='error' render={() => 
-                        <ValidationError errors={errors.error} />} />
+                    <ErrorMessage 
+                        name='error' render={() => 
+                            <ValidationError errors={errors.error as unknown as string[]} />} />
                     <Button
                         disabled={!isValid || !dirty || isSubmitting} 
                         loading={isSubmitting} 
