@@ -23,8 +23,8 @@ export default observer(function ActivityDetailedSidebar ({activity: {attendees,
             </Segment>
             <Segment attached>
                 <List relaxed divided>
-                    {attendees.map(attendee => (
-                        <Item style={{ position: 'relative' }} key={attendee.username}>
+                    {attendees.map((attendee, index) => (
+                        <Item style={{ position: 'relative' }} key={`${attendee.username}-${index}`}>
                             {attendee.username === host?.username &&
                             <Label
                                 style={{ position: 'absolute' }}
@@ -42,8 +42,8 @@ export default observer(function ActivityDetailedSidebar ({activity: {attendees,
                             </Item.Content>
                         </Item>
                     ))}
-
                 </List>
+
             </Segment>
         </>
 

@@ -27,10 +27,10 @@ namespace Application.Photos
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await _context.Users.Include(p => p.Photo)
+                var user = await _context.Users.Include(p => p.Photos)
                     .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
-                var photo = user.Photo.FirstOrDefault(x => x.Id == request.Id);
+                var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
 
                 if (photo == null) return null;
 
@@ -40,7 +40,7 @@ namespace Application.Photos
 
                 if (result == null) return Result<Unit>.Failure("Problem deleting photo");
 
-                user.Photo.Remove(photo);
+                user.Photos.Remove(photo);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
