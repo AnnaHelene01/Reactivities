@@ -13,12 +13,9 @@ export default observer(function ProfilePage() {
     const {loadingProfile, loadProfile, profile} = profileStore;
 
     useEffect(() => {
-        console.log("Fetching profile for username:", username);
         if (username) loadProfile(username);
     }, [loadProfile, username]);
     
-    // Sjekk om profile.photos-feltet er definert og inneholder bildedata før du sender det til ProfilePhotos-komponenten
-    console.log("Profile data in ProfilePage:", profile);
 
     if (loadingProfile) return <LoadingComponent inverted content='Loading profile...' />
 
@@ -27,8 +24,8 @@ export default observer(function ProfilePage() {
     return (
         <Grid>
             <Grid.Column width='16'>
-                <ProfileHeader profile={profile}/>
-                <ProfileContent profile={profile} />
+                    <ProfileHeader profile={profile}/>
+                    <ProfileContent profile={profile} />           
             </Grid.Column>
         </Grid>
     )
