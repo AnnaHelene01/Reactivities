@@ -84,7 +84,7 @@ const Account = {
 }
 
 const Profiles = {
-    get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
+    get: (userName: string) => requests.get<Profile>(`/profiles/${userName}`),
     uploadPhoto: (file: any) => {
         let formData = new FormData();
         formData.append('File', file);
@@ -94,7 +94,10 @@ const Profiles = {
     },
     setMainPhoto: (id: string) => axios.post(`/photos/${id}/setMain`, {}),
     deletePhoto: (id: string) => axios.delete(`/photos/${id}`),
-    updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile)
+    updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile),
+    updateFollowing: (userName: string) => requests.post(`/follow/${userName}`, {}),
+    listFollowings: (userName: string, predicate: string) => requests
+    .get<Profile[]>(`/follow/${userName}?predicate=${predicate}`)
 }
 
 const agent = {

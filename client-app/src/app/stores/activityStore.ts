@@ -69,10 +69,10 @@ export default class ActivityStore {
         const user = store.userStore.user;
         if (user) {
             activity.isGoing = activity.attendees!.some(
-                a => a.username === user.userName
+                a => a.userName === user.userName
             );
             activity.isHost = activity.hostUsername === user.userName;
-            activity.host = activity.attendees?.find(x => x.username === activity.hostUsername);
+            activity.host = activity.attendees?.find(x => x.userName === activity.hostUsername);
         }
         activity.date = new Date(activity.date!);
         this.activityRegistry.set(activity.id, activity);
@@ -139,7 +139,7 @@ export default class ActivityStore {
             await agent.Activities.attend(this.selectedActivity!.id);
             runInAction(() => {
                 if (this.selectedActivity?.isGoing) {
-                    this.selectedActivity.attendees = this.selectedActivity.attendees?.filter(a => a.username !== user?.userName);
+                    this.selectedActivity.attendees = this.selectedActivity.attendees?.filter(a => a.userName !== user?.userName);
                     this.selectedActivity.isGoing = false;
                 } else {
                     const attendee = new Profile(user!);
@@ -172,5 +172,16 @@ export default class ActivityStore {
 
     clearSelectedActivity = () => {
         this.selectedActivity = undefined;
+    }
+
+    updateAttendeeFollowing = (userName: string) => {
+        this.activityRegistry.forEach(activity => {
+            activity.attendees?.forEach(attendee => {
+                if (attendee.userName === userName) {
+                    attendee.following ? attendee.followersCount-- : attendee.followersCount++;
+                    attendee.following = !attendee.following;
+                }
+            })
+        })
     }
 }
