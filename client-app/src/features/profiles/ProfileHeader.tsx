@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { Grid, Segment, Item, Header, Statistic, Divider, } from "semantic-ui-react";
+import { Grid, Segment, Item, Header, Statistic, Divider } from "semantic-ui-react";
 import { Profile } from '../../app/models/profile';
 import FollowButton from './FollowButton';
 
@@ -7,7 +7,7 @@ interface Props {
     profile: Profile
 }
 
-export default observer(function ProfileHeader({profile}: Props) {
+export default observer(function ProfileHeader({ profile }: Props) {
     return (
         <Segment>
             <Grid>
@@ -20,7 +20,7 @@ export default observer(function ProfileHeader({profile}: Props) {
                                 src={profile.image || '/assets/user.png'}
                             />
                             <Item.Content verticalAlign='middle'>
-                                <Header as='h1' content={profile.displayName}/>
+                                <Header as='h1' content={profile.displayName} />
                             </Item.Content>
                         </Item>
                     </Item.Group>

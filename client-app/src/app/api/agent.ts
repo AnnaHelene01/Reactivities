@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { Activity, ActivityFormValues } from '../models/activity';
+import { Photo, Profile } from '../models/profile';
 import { User, UserFormValues } from '../models/user';
 import { router } from '../router/Routes';
 import { store } from '../stores/store';
-import { Photo, Profile } from '../models/profile';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -84,7 +84,7 @@ const Account = {
 }
 
 const Profiles = {
-    get: (userName: string) => requests.get<Profile>(`/profiles/${userName}`),
+    get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
     uploadPhoto: (file: any) => {
         let formData = new FormData();
         formData.append('File', file);
@@ -95,9 +95,9 @@ const Profiles = {
     setMainPhoto: (id: string) => axios.post(`/photos/${id}/setMain`, {}),
     deletePhoto: (id: string) => axios.delete(`/photos/${id}`),
     updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile),
-    updateFollowing: (userName: string) => requests.post(`/follow/${userName}`, {}),
-    listFollowings: (userName: string, predicate: string) => requests
-    .get<Profile[]>(`/follow/${userName}?predicate=${predicate}`)
+    updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
+    listFollowings: (username: string, predicate: string) => requests
+        .get<Profile[]>(`/follow/${username}?predicate=${predicate}`)
 }
 
 const agent = {

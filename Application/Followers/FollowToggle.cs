@@ -18,17 +18,19 @@ namespace Application.Followers
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
+
             public Handler(DataContext context, IUserAccessor userAccessor)
             {
-                _context = context;
                 _userAccessor = userAccessor;
+                _context = context;
             }
+
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var observer = await _context.Users.FirstOrDefaultAsync(x => 
+                var observer = await _context.Users.FirstOrDefaultAsync(x =>
                     x.UserName == _userAccessor.GetUsername());
 
-                var target = await _context.Users.FirstOrDefaultAsync(x => 
+                var target = await _context.Users.FirstOrDefaultAsync(x =>
                     x.UserName == request.TargetUsername);
 
                 if (target == null) return null;
@@ -45,7 +47,7 @@ namespace Application.Followers
 
                     _context.UserFollowings.Add(following);
                 }
-                else 
+                else
                 {
                     _context.UserFollowings.Remove(following);
                 }
@@ -53,9 +55,10 @@ namespace Application.Followers
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Result<Unit>.Success(Unit.Value);
-                
+
                 return Result<Unit>.Failure("Failed to update following");
             }
         }
+
     }
 }

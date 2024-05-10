@@ -1,5 +1,3 @@
-
-
 using Domain;
 using FluentValidation;
 

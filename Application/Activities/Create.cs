@@ -1,5 +1,3 @@
-
-using System.Diagnostics;
 using Application.Core;
 using Application.Interfaces;
 using Domain;
@@ -7,7 +5,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Activity = Domain.Activity;
 
 namespace Application.Activities
 {
@@ -18,28 +15,29 @@ namespace Application.Activities
             public Activity Activity { get; set; }
         }
 
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
-            }
-        }
-
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
+
             public Handler(DataContext context, IUserAccessor userAccessor)
             {
-                _context = context;
                 _userAccessor = userAccessor;
+                _context = context;
+            }
+
+            public class CommandValidator : AbstractValidator<Command>
+            {
+                public CommandValidator()
+                {
+                    RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
+                }
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => 
-                x.UserName == _userAccessor.GetUsername());
+                    x.UserName == _userAccessor.GetUsername());
 
                 var attendee = new ActivityAttendee
                 {

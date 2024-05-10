@@ -69,10 +69,10 @@ export default class ActivityStore {
         const user = store.userStore.user;
         if (user) {
             activity.isGoing = activity.attendees!.some(
-                a => a.userName === user.userName
+                a => a.username === user.username
             );
-            activity.isHost = activity.hostUsername === user.userName;
-            activity.host = activity.attendees?.find(x => x.userName === activity.hostUsername);
+            activity.isHost = activity.hostUsername === user.username;
+            activity.host = activity.attendees?.find(x => x.username === activity.hostUsername);
         }
         activity.date = new Date(activity.date!);
         this.activityRegistry.set(activity.id, activity);
@@ -92,7 +92,7 @@ export default class ActivityStore {
         try {
             await agent.Activities.create(activity);
             const newActivity = new Activity(activity);
-            newActivity.hostUsername = user!.userName;
+            newActivity.hostUsername = user!.username;
             newActivity.attendees = [profile];
             this.setActivity(newActivity);
             runInAction(() => this.selectedActivity = newActivity);
@@ -139,7 +139,7 @@ export default class ActivityStore {
             await agent.Activities.attend(this.selectedActivity!.id);
             runInAction(() => {
                 if (this.selectedActivity?.isGoing) {
-                    this.selectedActivity.attendees = this.selectedActivity.attendees?.filter(a => a.userName !== user?.userName);
+                    this.selectedActivity.attendees = this.selectedActivity.attendees?.filter(a => a.username !== user?.username);
                     this.selectedActivity.isGoing = false;
                 } else {
                     const attendee = new Profile(user!);
@@ -177,7 +177,7 @@ export default class ActivityStore {
     updateAttendeeFollowing = (userName: string) => {
         this.activityRegistry.forEach(activity => {
             activity.attendees?.forEach(attendee => {
-                if (attendee.userName === userName) {
+                if (attendee.username === userName) {
                     attendee.following ? attendee.followersCount-- : attendee.followersCount++;
                     attendee.following = !attendee.following;
                 }

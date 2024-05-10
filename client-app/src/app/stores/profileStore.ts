@@ -35,17 +35,18 @@ export default class ProfileStore {
 
     get isCurrentUser() {
         if (store.userStore.user && this.profile) {
-            return store.userStore.user.userName === this.profile.userName;
+            return store.userStore.user.username === this.profile.username;
         }
         return false;
     }
 
-    loadProfile = async (userName: string) => {
+    loadProfile = async (username: string) => {
         this.loadingProfile = true;
         try {
-            const profile = await agent.Profiles.get(userName);
+            const profile = await agent.Profiles.get(username);
             runInAction(() => {
                 this.profile = profile;
+                //console.log('Loaded profile:', this.profile);
                 this.loadingProfile = false;
             })
         } catch (error) {
@@ -130,23 +131,23 @@ export default class ProfileStore {
         }
     }
 
-    updateFollowing = async (userName: string, following: boolean) => {
+    updateFollowing = async (username: string, following: boolean) => {
         this.loading = true;
         try {
-            await agent.Profiles.updateFollowing(userName);
-            store.activityStore.updateAttendeeFollowing(userName);
+            await agent.Profiles.updateFollowing(username);
+            store.activityStore.updateAttendeeFollowing(username);
             runInAction(() => {
                 if (this.profile 
-                        && this.profile.userName !== store.userStore.user?.userName 
-                        && this.profile.userName === userName) {
+                        && this.profile.username !== store.userStore.user?.username 
+                        && this.profile.username === username) {
                     following ? this.profile.followersCount++ : this.profile.followersCount--;
                     this.profile.following = !this.profile.following;
                 }
-                if (this.profile && this.profile.userName === store.userStore.user?.userName) {
+                if (this.profile && this.profile.username === store.userStore.user?.username) {
                     following ? this.profile.followingCount++ : this.profile.followingCount--;
                 }
                 this.followings.forEach(profile => {
-                    if (profile.userName === userName) {
+                    if (profile.username === username) {
                         profile.following ? profile.followersCount-- : profile.followersCount++
                         profile.following = !profile.following;
                     }
@@ -160,15 +161,17 @@ export default class ProfileStore {
     }
 
     loadFollowings = async (predicate: string) => {
+        //console.log('Loading followings with predicate:', predicate);
         this.loadingFollowings = true;
         try {
-            const followings = await agent.Profiles.listFollowings(this.profile!.userName, predicate);
+            const followings = await agent.Profiles.listFollowings(this.profile!.username, predicate);
+            //console.log('Followings from API response:', followings);
             runInAction(() => {
                 this.followings = followings;
                 this.loadingFollowings = false;
             })
         } catch (error) {
-            console.log(error);
+            console.log('Error loading followings:', error);
             runInAction(() => this.loadingFollowings = false);
         }
     }
