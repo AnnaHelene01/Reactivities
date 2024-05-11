@@ -1,4 +1,3 @@
-using API.Controller;
 using Application.Followers;
 using Microsoft.AspNetCore.Mvc;
 

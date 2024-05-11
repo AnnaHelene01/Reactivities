@@ -1,5 +1,3 @@
-using API.Controller;
-using Application.Activities;
 using Application.Photos;
 using Microsoft.AspNetCore.Mvc;
 

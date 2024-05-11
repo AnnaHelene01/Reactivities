@@ -1,4 +1,3 @@
-using API.Controller;
 using Application.Profiles;
 using Microsoft.AspNetCore.Mvc;
 

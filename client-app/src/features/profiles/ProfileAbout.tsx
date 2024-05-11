@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useStore } from "../../app/stores/store";
-import { Button, Grid, Header, TabPane } from "semantic-ui-react";
+import { Button, Grid, Header, TabPane, } from "semantic-ui-react";
 import ProfileEditForm from "./ProfileEditForm";
 import { observer } from 'mobx-react-lite';
 
@@ -9,7 +9,7 @@ export default observer(function ProfileAbout() {
     const { isCurrentUser, profile } = profileStore;
     const [editMode, setEditMode] = useState(false);
 
-    return (    
+    return (
         <TabPane>
             <Grid>
                 <Grid.Column width='16'>
@@ -17,7 +17,7 @@ export default observer(function ProfileAbout() {
                         floated='left'
                         icon='user'
                         content={`About ${profile?.displayName}`} />
-                        {!isCurrentUser && (
+                        {isCurrentUser && (
                         <Button
                             floated='right'
                             basic
