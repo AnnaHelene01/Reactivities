@@ -40,7 +40,7 @@ export default observer(function ProfilePhotos({ profile }: Props) {
             <Grid>
                 <Grid.Column width='16'>
                     <Header floated='left' icon='image' content='Photos' />
-                    {!isCurrentUser && (
+                    {isCurrentUser && (
                         <Button floated='right' basic 
                            content={addPhotoMode ? 'Cancel' : 'Add Photo'} 
                             onClick={() => setAddPhotoMode(!addPhotoMode)} />
@@ -54,7 +54,7 @@ export default observer(function ProfilePhotos({ profile }: Props) {
                             {profile.photos?.map(photo => (
                                 <Card key={photo.id} onClick={() => logPhotoData(photo)}> {/* Legg til denne linjen */}
                                     <Image src={photo.url} />
-                                    {!isCurrentUser && (
+                                    {isCurrentUser && (
                                         <Button.Group fluid widths={2}>
                                             <Button
                                                 basic
