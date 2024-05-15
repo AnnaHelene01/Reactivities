@@ -11,8 +11,8 @@ primary_region = 'arn'
 
 [env]
   ASPNETCORE_URLS="http://+:8080"
-  Cloudinary__CloudName="dj3wmuy3l"
-  Cloudinary__ApiKey="895484589483755"
+  Cloudinary__CloudName="dnluqcqfz"
+  Cloudinary__ApiKey="352342921823463"
 
 [http_service]
   internal_port = 8080
